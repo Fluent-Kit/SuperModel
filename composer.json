@@ -1,0 +1,31 @@
+{
+    "name": "fluentkit/supermodel",
+    "description": "Enhancement of the already brilliant Eloquent Model Class",
+    "keywords": ["validation", "laravel", "framework", "eloquent", "database", "sql", "orm", "activerecord", "active record"],
+    "type": "library",
+    "homepage": "https://github.com/FluentKit/SuperModel",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Lee Mason",
+            "homepage": "http://nohalfpixels.com/",
+            "email": "contact@nohalfpixels.com",
+            "role": "Developer"
+        }
+    ],
+    "support": {
+        "issues": "https://github.com/FluentKit/SuperModel/issues"
+    },
+    "require": {
+        "php": ">=5.3.0",
+        "illuminate/support": "~4.1",
+        "illuminate/database": "~4.1",
+        "illuminate/validation": "~4.1"
+    },
+    "autoload": {
+        "psr-0": {
+            "FluentKit\\SuperModel": "src/"
+        }
+    },
+    "minimum-stability": "dev"
+}
