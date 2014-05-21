@@ -7,5 +7,4 @@ use Eloquent;
 class SuperModel extends Eloquent{
 
 	$var = array();
-	
 }
