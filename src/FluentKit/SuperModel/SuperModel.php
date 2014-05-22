@@ -8,13 +8,6 @@ use Hash;
 
 class SuperModel extends Eloquent{
 
-	protected $table = 'supermodel';
-
-	protected $hidden = array('password');
-
-	protected $guarded = array('id');
-
-
 	/*
 	 * SuperModel Atts
 	 */
