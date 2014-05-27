@@ -158,6 +158,16 @@ class SuperModel extends Eloquent{
     			$this->attributes[$key] = $this->sanitizeAttribute($attribute, $schema[$key]);
     		}
     	}
+        /*
+        foreach($this->rules as $scope => $fields){
+            foreach($fields as $key => $rules){
+                $rules = explode('|', $rules);
+                if(in_array('confirmed', $rules)){
+                    $this->attributes[$key.'_confirmation'] = $this->attributes[$key];   
+                }
+            }
+        }
+        */
     }
 
     private function sanitizeAttribute( $value, $type = 'string'){
@@ -240,9 +250,35 @@ class SuperModel extends Eloquent{
         
         $this->rules = $rulescopes;
     }
+    
+    
+    private function buildIfDirtyRules() {
+
+		$rulescopes = $this->rules;
+
+		foreach($rulescopes as $scope => &$rules){
+
+	        foreach ($rules as $field => &$ruleset) {
+	            // If $ruleset is a pipe-separated string, switch it to array
+	            $ruleset = (is_string($ruleset))? explode('|', $ruleset) : $ruleset;
+
+	            foreach ($ruleset as &$rule) {
+					if (str_contains($rule, '_if_dirty')) {
+                        if($this->isDirty($field) || !$this->exists){
+						  $rule = str_replace('_if_dirty', '', $rule);
+                        }else{
+                            $rule = '';
+                        }
+					}
+	            } // end foreach ruleset
+	        }
+    	}
+        $this->rules = $rulescopes;
+    }
 
     private function buildValidationRules($scope = 'create'){
     	$this->buildUniqueRules();
+        $this->buildIfDirtyRules();
     	$this->normalizeRules();
     	$rules = $this->rules['global'];
     	foreach($this->rules[$scope] as $key => $value){
@@ -259,7 +295,7 @@ class SuperModel extends Eloquent{
     //we then add the actual model values which replace any original values
     //and finally we replace actual values with none-hashed values if there are any (so validation is done on plain text versions of the fields)
     private function buildValidationValues(){
-    	return array_merge($this->old_attributes, $this->attributes, $this->hashed_originals);
+        return array_merge($this->old_attributes, $this->attributes, $this->hashed_originals);
     }
 
     //get validator based on scope
