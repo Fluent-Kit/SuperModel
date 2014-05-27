@@ -24,7 +24,7 @@ class SuperModel extends Eloquent{
 		'update' => array()
 	);
 
-	private $attributes_schema = array();
+	protected $attributes_schema = array();
 
 	protected $sanitize_attributes = true;
 
@@ -145,6 +145,12 @@ class SuperModel extends Eloquent{
     	$this->old_attributes = $this->attributes;
 
     	$schema = $this->attributes_schema;
+        
+        if(!isset($schema[$this->getKeyName()])){
+            $this->attributes_schema[$this->getKeyName()] = 'int';
+            $schema = $this->attributes_schema;
+        }
+        
     	foreach($this->attributes as $key => $attribute){
     		if(!isset($schema[$key])){
     			unset($this->attributes[$key]);
@@ -219,16 +225,12 @@ class SuperModel extends Eloquent{
 						else
 							$uniqueRules[2] = $params[1];
 
-						if (isset($this->primaryKey) && $this->exists){
-							$uniqueRules[3] = $this->{$this->primaryKey};
-							$uniqueRules[4] = $this->primaryKey;
-						}elseif($this->exists){
-							$uniqueRules[3] = $this->id;
-						}
+						$uniqueRules[3] = $this->getKey();
+				        $uniqueRules[4] = $this->getKeyName();
 
 						$rule = 'unique:' . implode(',', $uniqueRules);
 					}elseif(str_contains($rule, 'unique') && str_contains($rule, '{id}')){  
-						$rule = str_replace('{id}', $this->id, $rule);
+						$rule = str_replace('{id}', $this->getKey(), $rule);
 					} // end if str_contains
 	              
 	            } // end foreach ruleset
