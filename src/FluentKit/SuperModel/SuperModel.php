@@ -2,11 +2,11 @@
 
 namespace FluentKit\SuperModel;
 
-use Eloquent;
+use Illuminate\Database\Eloquent\Model;
 use Validator;
 use Hash;
 
-class SuperModel extends Eloquent{
+class SuperModel extends Model{
 
 	/*
 	 * SuperModel Atts
